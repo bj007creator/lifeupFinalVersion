@@ -1,11 +1,12 @@
 
 const divCategorias = document.getElementsByClassName('categorias-alimentos')[0];
-var arranjo_alimentos_selecionados = [];
+let arranjo_alimentos_selecionados = [];
 
 //arranjo de dieta 
-var dietaArray = [];
+let dietaArray = [];
 
-var db = JSON.parse(localStorage.getItem('db_results_real2'));
+let db = JSON.parse(localStorage.getItem('db_results_real2'));
+
 const dietaBalanceada = {
     "gerarKcal": function(){
         if(db.results[0].imc === -1){
@@ -41,14 +42,14 @@ const dietaBalanceada = {
         
     },
     "criarBlocoKcal": function(kcal){
-        var content = ` 
+        let content = ` 
                         <div id="mostra-kcal" >
                             <span class="kcal-marcador">
                                 ${kcal} kcal  
                             </span></br>
                         </div>`;
-        var divsDoLayoutGrid = "";
-        for(var i = 0; i <= kcal; i++){
+        let divsDoLayoutGrid = "";
+        for(let i = 0; i <= kcal; i++){
             divsDoLayoutGrid += `<div class="index" style="background-color: red;"></div>`;
         }
         $('#contador-calorias').html(content);
@@ -86,20 +87,20 @@ function funcaoLimparArranjo(){
     localStorage.setItem('db_results_real2', JSON.stringify(db));
 }
 //variável de controle que verifica se os arrays estão vazios
-var verificador = 0;
+let verificador = 0;
 //variável para pegar o primeiro alimento para utilizar como base para comparar com os outros
-var verificador1 = 0;
+let verificador1 = 0;
 //variável que verifica se o tamanho do array de dieta se manteve ou não
-var stateDoTam = 0;
+let stateDoTam = 0;
 //variáveis melhores posicionadas por cada categoria
-var melhorNome = melhorGramagem = melhorKcal = melhorFibras = melhorProteinas = melhorLipideos = melhorCarboidratos = posicaoJDoMelhor = " ";
+let melhorNome = melhorGramagem = melhorKcal = melhorFibras = melhorProteinas = melhorLipideos = melhorCarboidratos = posicaoJDoMelhor = " ";
 //variável para dividir as gramas para cada categoria seguindo a pirâmide alimentar
-var divisaoGramas = 0;
+let divisaoGramas = 0;
 //variável para verificar se há alimentos repetidos;
-var achei = false;
+let achei = false;
 
 //variável contra repetições
-var contraRepeticoes = 0;
+let contraRepeticoes = 0;
 
 
 
@@ -112,18 +113,6 @@ function funcaoSepararDietaSegundoPiramide(simbolo, cor,nome,kcal, status){
 
 //classifica o alimento segundo a pirâmide alimentar
 function classificacaoDeGruposDeAlimentos(indice,kcal, proteina, lipideos, carboidrato,fibras,nome, j_melhor){
-    if(melhorCarboidratos == "NA" ){
-        melhorCarboidratos = 0;
-    }
-    if(melhorFibras == "NA"){
-        melhorFibras = 0;
-    }
-    if(melhorLipideos == "NA"){
-        melhorLipideos = 0;
-    }
-    if(melhorProteinas == "NA"){
-        melhorProteinas = 0;
-    }
     if(db.results[0].calorias < Number(db.results[0].caloriaGeral)){
 
     }
@@ -315,82 +304,60 @@ function classificacaoDeGruposDeAlimentos(indice,kcal, proteina, lipideos, carbo
 //variável para localizar o primeiro alimento da nova requisição
 var novoValidador = 0;
 //funcao nova requisição com o objetivo de pegar o melhor alimento desta categoria já que o usuário não selecionou nenhum alimento
-function funcaoNovaRequisicaoParaGerarMelhorAlimento(indice){
-    $.ajax({
-        crossOrigin: true,
-        url: `https://taco-food-api.herokuapp.com/api/v1/category/${indice}/food`,
-        success: function(dados){
-            for(var i = 0; i < dados.length; i++){
-                var nome = dados[i].description;
-                var kcal = dados[i].attributes.energy.kcal;
-                var kcalArredondado = parseFloat(kcal.toFixed(2));
-                if(!dados[i].attributes.protein.qty){
-                    var proteinas = dados[i].attributes.protein.qty;
-                }
-                else{
-                    var proteinas = 0;
-                }
-                if(!dados[i].attributes.lipid.qty){
-                    var lipideos = dados[i].attributes.lipid.qty;
-                }
-                else{
-                    var lipideos = 0;
-                }
-                if(!dados[i].attributes.carbohydrate.qty){
-                    var carboidratos = dados[i].attributes.carbohydrate.qty;
-                }
-                else{
-                    var carboidratos = 0;
-                }
-                if(!dados[i].attributes.fiber.qty){
-                    var fibras = dados[i].attributes.fiber.qty;
-                }
-                else{
-                    var fibras = 0;
-                }
-                var gramagem = 100;
-                novoValidador++;
-                if(novoValidador == 1){
-                    melhorNome = nome;
-                    melhorFibras = fibras;
-                    melhorCarboidratos = carboidratos;
-                    melhorLipideos = lipideos;
-                    melhorProteinas = proteinas;
-                    melhorKcal = kcalArredondado;
-                    posicaoJDoMelhor = 0;
-                }
-                else{
-                    classificacaoDeGruposDeAlimentos(indice-1,kcalArredondado,proteinas,lipideos,carboidratos,fibras,nome, posicaoJDoMelhor);
-                }
-            }
-            funcaoSepararDietaSegundoPiramide('fas fa-question', '#585858',melhorNome, melhorKcal, 1);
+function funcaoNovaRequisicaoParaGerarMelhorAlimento(indice, type){
+    for(let i = 0; i < db.results[`${type}`].length; i++){
+		let item = db.results[`${type}`][i];
+        let kcal = item.attributes.energy.kcal;
+        let kcalArredondado = parseFloat(kcal.toFixed(2));
+		let proteinas = item.attributes.protein.qty;    
+        let lipideos = item.attributes.lipid.qty;
+        let carboidratos = item.attributes.carbohydrate.qty;    
+        let fibras = item.attributes.fiber.qty;
+		let nome = item.description;
+                
+        let gramagem = 100;
+        novoValidador++;
+        if(novoValidador == 1){
+			melhorNome = nome;
+            melhorFibras = fibras;
+            melhorCarboidratos = carboidratos;
+            melhorLipideos = lipideos;
+            melhorProteinas = proteinas;
+            melhorKcal = kcalArredondado;
+            posicaoJDoMelhor = 0;
         }
-    });
+        else{
+            classificacaoDeGruposDeAlimentos(indice-1,kcalArredondado,proteinas,lipideos,carboidratos,fibras,nome, posicaoJDoMelhor);
+        }
+    }
+    funcaoSepararDietaSegundoPiramide('fas fa-question', '#585858',melhorNome, melhorKcal, 1);
 }
 
 //gerar dieta flexivel
-function gerarDieta(i){
+function gerarDieta(i, type){
     contraRepeticoes++;
     achei = false;
-    
+    let simboloDaCategoria;
+    let corDaCategoria;
+	let gramagem;
             verificador1 = 0;
-            var array_teste = db.results[1].alimentos[i];
+            let array_teste = db.results[1].alimentos[i];
             if(array_teste.length == 0){
-                funcaoNovaRequisicaoParaGerarMelhorAlimento(i+1);
+                funcaoNovaRequisicaoParaGerarMelhorAlimento(i+1, type);
             }
             else{
-                for(var j = 0; j < db.results[1].alimentos[i].length; j++){
-                    var alimentoEspecifico = db.results[1].alimentos[i][j];
-                    var atributosEspecifico = db.results[2].atributos[i][j];
-                    var arrayDeAtributos = atributosEspecifico.split("*");
-                    var kcal = arrayDeAtributos[0];
-                    var proteinas = arrayDeAtributos[1];
-                    var lipideos = arrayDeAtributos[2];
-                    var carboidratos = arrayDeAtributos[3];
-                    var fibras = arrayDeAtributos[4];
-                    var simboloDaCategoria = arrayDeAtributos[5];
-                    var corDaCategoria = arrayDeAtributos[6];
-                    var gramagem = 100;
+                for(let j = 0; j < db.results[1].alimentos[i].length; j++){
+                    let alimentoEspecifico = db.results[1].alimentos[i][j];
+                    let atributosEspecifico = db.results[2].atributos[i][j];
+                    let arrayDeAtributos = atributosEspecifico.split("*");
+                    let kcal = arrayDeAtributos[0];
+                    let proteinas = arrayDeAtributos[1];
+                    let lipideos = arrayDeAtributos[2];
+                    let carboidratos = arrayDeAtributos[3];
+                    let fibras = arrayDeAtributos[4];
+                    simboloDaCategoria = arrayDeAtributos[5];
+                    corDaCategoria = arrayDeAtributos[6];
+                    gramagem = 100;
                     verificador1++;
             //lendo o primeiro e atribuindo tudo a ele
                     if(verificador1 == 1){
@@ -408,8 +375,8 @@ function gerarDieta(i){
                 }//final do for do j
             
                 if(contraRepeticoes > 1){
-                    for(var h = 0; h < dietaArray.length; h++){
-                        var alimentoEspec = dietaArray[h];
+                    for(let h = 0; h < dietaArray.length; h++){
+                        let alimentoEspec = dietaArray[h];
                         if(alimentoEspec == (melhorNome + "&" + melhorKcal + "&" + gramagem + "&" + divisaoGramas)){
                             achei = true;
                         }
@@ -428,120 +395,120 @@ function gerarDieta(i){
             }
 }
 //função que classifica a categoria
-function funcaoClassificaCategoria(k){
+function funcaoClassificaCategoria(k, type){
     switch(k){
         case 0:
-            gerarDieta(k);
+            gerarDieta(k, type);
             dietaArray.push("*");
             break;
         case 1:
             for(var o = 0; o < 3; o++){
-                gerarDieta(k);
+                gerarDieta(k, type);
             }
             dietaArray.push("*");
             break;
         case 2:
             if(Math.floor(Math.random() * 11) > 5){
                 for(var o = 0; o < 3; o++){
-                    gerarDieta(k);
+                    gerarDieta(k, type);
                 }
             }
             else{
                 for(var o = 0; o < 2; o++){
-                    gerarDieta(k);
+                    gerarDieta(k, type);
                 }
             }
             dietaArray.push("*");
             break;
         case 3:
-            gerarDieta(k);
+            gerarDieta(k, type);
             dietaArray.push("*");    
             break;
         case 4:
             if(Math.floor(Math.random() * 11) > 5){
-                for(var a = 0; a < 3; a++){
-                    gerarDieta(k);
+                for(let a = 0; a < 3; a++){
+                    gerarDieta(k, type);
                 }
             }
             else{
-                for(var a = 0; a < 2; a++){
-                    gerarDieta(k);
+                for(let a = 0; a < 2; a++){
+                    gerarDieta(k, type);
                 }
             }
             dietaArray.push("*");
             break;
         case 5:
-            gerarDieta(k);
+            gerarDieta(k, type);
             dietaArray.push("*");
             break;
         case 6:
             if(Math.floor(Math.random() * 11) > 5){
-                for(var b = 0; b < 2; b++){
-                    gerarDieta(k);
+                for(let b = 0; b < 2; b++){
+                    gerarDieta(k, type);
                 }
             }
             else{
-                for(var b = 0; b < 1; b++){
-                    gerarDieta(k);
+                for(let b = 0; b < 1; b++){
+                    gerarDieta(k, type);
                 }
             }
             dietaArray.push("*");
             break;
         case 7:
-            gerarDieta(k);
+            gerarDieta(k, type);
             dietaArray.push("*");
             break;
         case 8:
             if(Math.floor(Math.random() * 11) > 5){
-                for(var c = 0; c < 1; c++){
-                    gerarDieta(k);
+                for(let c = 0; c < 1; c++){
+                    gerarDieta(k, type);
                 }
             }
             else{
                 for(var c = 0; c < 2; c++){
-                    gerarDieta(k);
+                    gerarDieta(k, type);
                 }
             }
             dietaArray.push("*");
             break;
         case 9:
-            gerarDieta(k);
+            gerarDieta(k, type);
             dietaArray.push("*");
             break;
         case 10:
-            gerarDieta(k);
+            gerarDieta(k, type);
             dietaArray.push("*");
             break;
         case 11:
-            gerarDieta(k);
+            gerarDieta(k, type);
             dietaArray.push("*");
             break;
         case 12:
-            gerarDieta(k);
+            gerarDieta(k, type);
             dietaArray.push("*");
             break;
         case 13:
             if(Math.floor(Math.random() * 11) > 5){
-                for(var d = 0; d < 10; d++){
-                    gerarDieta(k);
+                for(let d = 0; d < 10; d++){
+                    gerarDieta(k, type);
                 }
             }
             else{
-                for(var d = 0; d < 10; d++){
-                    gerarDieta(k);
+                for(let d = 0; d < 10; d++){
+                    gerarDieta(k, type);
                 }
             }
             dietaArray.push("*");
             break;
         case 14:
             if(Math.floor(Math.random() * 11) > 5){
-                for(var e = 0; e < 10; e++){
-                    gerarDieta(k);
+                for(let e = 0; e < 10; e++){
+                    gerarDieta(k, type);
                 }
             }
             else{
-                for(var e = 0; e < 10; e++){
-                    gerarDieta(k);
+                for(let e = 0; e < 10; e++){
+                    gerarDieta(k, type);
                 }
             }
             dietaArray.push("*");
@@ -557,21 +524,25 @@ function funcaoRequisicaoAlimento(nome){
 }
 /*função para dividir a kcal e as gramas pela quantidade de refeições*/
 function funcaoDividirPelaQuantidadeDeRefeicoes(){
-    if(db.results[0].dieta[0].alimentosDieta.length == 0 || db.results[0].quantRefeicoes == 0){
+	console.log("dividir pela quant " + Number(db.results[0].quantRefeicoes));
+    if(Number(db.results[0].dieta[0].alimentosDieta.length) == 0 || Number(db.results[0].quantRefeicoes) == 0){
         //nenhum alimento selecionado
+		console.log("dividir pela quant dentro if " + Number(db.results[0].dieta[0].alimentosDieta.length));
     }
     else{
-        for(var i = 0; i < db.results[0].dieta[0].alimentosDieta.length; i++){
+		
+        for(let i = 0; i < Number(db.results[0].dieta[0].alimentosDieta.length); i++){
             var blocoEspecifico = db.results[0].dieta[0].alimentosDieta[i];
             var arrayDeBlocos = blocoEspecifico.split("&");
+			console.log("dividir pela quant " + Number(db.results[0].dieta[0].alimentosDieta.length));
             for(var j = 0; j < db.results[0].quantRefeicoes; j++){
-                var nome = arrayDeBlocos[0];
-                var kcal = Math.trunc(arrayDeBlocos[1] / db.results[0].quantRefeicoes);
-                var gramagem = Math.trunc(arrayDeBlocos[2] / db.results[0].quantRefeicoes);
-                var simbolo = arrayDeBlocos[3];
-                var cor = arrayDeBlocos[4];
-                var status = arrayDeBlocos[5];
-                var img = simbolo.replace(" ","%20");
+				let nome = arrayDeBlocos[0];
+                let kcal = Math.trunc(arrayDeBlocos[1] / db.results[0].quantRefeicoes);
+                let gramagem = Math.trunc(arrayDeBlocos[2] / db.results[0].quantRefeicoes);
+                let simbolo = arrayDeBlocos[3];
+                let cor = arrayDeBlocos[4];
+                let status = arrayDeBlocos[5];
+                let img = simbolo.replace(" ","%20");
 
                 db.results[0].dieta[1].arrayAlimentosAuxiliar.push(nome + "&" + kcal + "&" + gramagem + "&" + simbolo + "&" + cor + "&" + status);
             }//for do j
@@ -582,25 +553,24 @@ function funcaoDividirPelaQuantidadeDeRefeicoes(){
 
 /*função para exibir os alimentos*/
 function funcaoExibirAlimentos(){
-    var blocos = "";
-    var data = new Date();
-    var dia = data.getDate();
-    var mes = data.getMonth();
+    let blocos = "";
     
     if(db.results[0].dieta[0].alimentosDieta.length == 0){
         //nenhum alimento selecionado
     }
     else{
-        for(var i = 0; i < db.results[0].dieta[1].arrayAlimentosAuxiliar.length; i++){
-            var blocoEspecifico = db.results[0].dieta[1].arrayAlimentosAuxiliar[i];
-            var arrayDeBlocos = blocoEspecifico.split("&");
-            var nome = arrayDeBlocos[0];
-            var kcal = arrayDeBlocos[1];
-            var gramagem = arrayDeBlocos[2];
-            var simbolo = arrayDeBlocos[3];
-            var cor = arrayDeBlocos[4];
-            var status = arrayDeBlocos[5];
-            var img = simbolo.replace(" ","%20");
+		console.log(db.results[0].dieta[1].arrayAlimentosAuxiliar.length);
+        for(let i = 0; i < db.results[0].dieta[1].arrayAlimentosAuxiliar.length; i++){
+			
+            let blocoEspecifico = db.results[0].dieta[1].arrayAlimentosAuxiliar[i];
+            let arrayDeBlocos = blocoEspecifico.split("&");
+            let nome = arrayDeBlocos[0];
+            let kcal = arrayDeBlocos[1];
+            let gramagem = arrayDeBlocos[2];
+            let simbolo = arrayDeBlocos[3];
+            let cor = arrayDeBlocos[4];
+            let status = arrayDeBlocos[5];
+            let img = simbolo.replace(" ","%20");
             if(status == 0){
                 blocos += ` 
             <div class="corpo-pre-alimento-selecionado">
@@ -642,7 +612,7 @@ function funcaoExibirAlimentos(){
             }
             
         }//final do for
-
+		console.log("Chegou aqui");
         $('#pre-selecionados').css('display', 'block');
         $('#pre-selecionados').html(blocos);
     }
@@ -818,53 +788,28 @@ function criarFormQuantRef(){
     }
 }
 //função para buscar alimentos
-function funcaoBuscarAlimentos(indice, symbol, cor){
-    $.ajax({
-        crossOrigin: true,
-        url: `https://taco-food-api.herokuapp.com/api/v1/category/${indice}/food`,
-        success: function(dados){
-            //criando botão do carrinho para verificar itens selecionados e ter a opção de deletá-los colocar aqui quando estiver dando certo a requisição com o nome do alimento passado como parâmetro para a função mostrar alimentos pré-selecionados;
-            
-            let opcoes = "";
-            for(var i = 0; i < dados.length; i++){
-                var kcal = dados[i].attributes.energy.kcal;
-                var kcalArredondado = parseFloat(kcal.toFixed(2));
-                if(!dados[i].attributes.protein.qty){
-                    var proteinas = dados[i].attributes.protein.qty;
-                }
-                else{
-                    var proteinas = 0;
-                }
-                if(!dados[i].attributes.lipid.qty){
-                    var lipideos = dados[i].attributes.lipid.qty;
-                }
-                else{
-                    var lipideos = 0;
-                }
-                if(!dados[i].attributes.carbohydrate.qty){
-                    var carboidratos = dados[i].attributes.carbohydrate.qty;
-                }
-                else{
-                    var carboidratos = 0;
-                }
-                if(!dados[i].attributes.fiber.qty){
-                    var fibras = dados[i].attributes.fiber.qty;
-                }
-                else{
-                    var fibras = 0;
-                }
-                opcoes += ` <div class= bloco-alimento onclick="funcaoSelecionarAlimento('${dados[i].description}', ${i}, '${indice}', '${kcalArredondado}', '${proteinas}', '${lipideos}', '${carboidratos}', '${fibras}', '${symbol}', '${cor}');">
-                                <p>Nome ${dados[i].description}</br>
-                                <p>${kcalArredondado} Kcal</p>
-                            </div>`;
-            }
-            $('#res').html(opcoes);
-        }
-    });
+function funcaoBuscarAlimentos(indice, type, symbol, cor){
+    //criando botão do carrinho para verificar itens selecionados e ter a opção de deletá-los colocar aqui quando estiver dando certo a requisição com o nome do alimento passado como parâmetro para a função mostrar alimentos pré-selecionados; 
+    let opcoes = "";
+    for(let i = 0; i < db.results[`${type}`].length; i++){
+		let item = db.results[`${type}`][i];
+        let kcal = item.attributes.energy.kcal;
+        let kcalArredondado = parseFloat(kcal.toFixed(2));
+		let proteinas = item.attributes.protein.qty;    
+        let lipideos = item.attributes.lipid.qty;
+        let carboidratos = item.attributes.carbohydrate.qty;    
+        let fibras = item.attributes.fiber.qty;
+                
+        opcoes += ` <div class= bloco-alimento onclick="funcaoSelecionarAlimento('${item.description}', ${i}, '${indice}', '${kcalArredondado}', '${proteinas}', '${lipideos}', '${carboidratos}', '${fibras}', '${symbol}', '${cor}');">
+                        <p>Nome ${item.description}</br>
+                        <p>${kcalArredondado} Kcal</p>
+                    </div>`;
+    }
+    $('#res').html(opcoes);
 }
 
 //Criar botões categorizados 
-function criarBotoes(){
+/*function criarBotoes(){
     $.ajax({
         crossOrigin: true,
         url: `https://taco-food-api.herokuapp.com/api/v1/category`,
@@ -878,23 +823,11 @@ function criarBotoes(){
             $('#res').html(texto);
         }
     });
-}
+}*/
 
 function atualizaCarrinho(){
-    var atualiza = `<a class="atualiza-carrinho" onclick="funcaoMostrarAlimentosPreSelecionados();">Atualizar o carrinho de acordo com uma dieta adequada!</a>`;
+    let atualiza = `<a class="atualiza-carrinho" onclick="funcaoMostrarAlimentosPreSelecionados();">Atualizar o carrinho de acordo com uma dieta adequada!</a>`;
     $('#atualiza-carrinho').html(atualiza);
-}
-//
-function gerarDietaIncompleta(){
-    atualizaCarrinho();
-    funcaoDietaCategoriaEspecifica(0);
-    funcaoDietaCategoriaEspecifica(1);
-    funcaoDietaCategoriaEspecifica(2);
-    funcaoDietaCategoriaEspecifica(3);
-    funcaoDietaCategoriaEspecifica(4);
-    funcaoDietaCategoriaEspecifica(5);
-    funcaoDietaCategoriaEspecifica(6);
-    funcaoDietaCategoriaEspecifica(7);
 }
 
 

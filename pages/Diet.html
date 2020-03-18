@@ -12,7 +12,7 @@
   <link rel="shortcut icon" href="../images/favicon.png" />
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
 </head>
-<body style="background: #fff" onload="init()">
+<body style="background: #fff" onload="initDiet()">
     
 <header>
   <h1 style="display: none;">Life Up</h1><a href="../index.html"><img class="logo" src="../images/logo.gif"/></a>
@@ -38,12 +38,15 @@
 
 </div>
 <div class="btn-categorias">
-<a class="btn-botao cereais" onclick="funcaoBuscarAlimentos(1, 'fas fa-bread-slice', '#FFEC6D')"><i class="fas fa-bread-slice"></i> Cereais e derivados</a>
-<a class="btn-botao verduras" onclick="funcaoBuscarAlimentos(2, 'fas fa-leaf', '#06CD3E')"><i class="fas fa-leaf"></i> Verduras, hortaliças e derivados</a>
-<a class="btn-botao frutas" onclick="funcaoBuscarAlimentos(3, 'fas fa-apple-alt', '#6F4DE9')"><i class="fas fa-apple-alt"></i> Frutas e derivados</a>
+<a class="btn-botao cereais" onclick="funcaoBuscarAlimentos(1, 4, 'fas fa-bread-slice', '#FFEC6D')"><i class="fas fa-bread-slice"></i> Cereais e derivados</a>
+<a class="btn-botao verduras" onclick="funcaoBuscarAlimentos(2, 5, 'fas fa-leaf', '#06CD3E')"><i class="fas fa-leaf"></i> Verduras, hortaliças e derivados</a>
+<a class="btn-botao frutas" onclick="funcaoBuscarAlimentos(3, 6, 'fas fa-apple-alt', '#6F4DE9')"><i class="fas fa-apple-alt"></i> Frutas e derivados</a>
+<a class="btn-botao carnes" onclick="funcaoBuscarAlimentos(6, 7, 'fas fa-drumstick-bite', '#CD0621')"><i class="fas fa-drumstick-bite"></i> Carnes e derivados</a>
+
+<!--
 <a class="btn-botao oleos" onclick="funcaoBuscarAlimentos(4, 'fas fa-bacon', '#E97A4D')"><i class="fas fa-bacon"></i> Gorduras e óleos</a>
 <a class="btn-botao pescados" onclick="funcaoBuscarAlimentos(5, 'fas fa-fish', '#E94D99')"><i class="fas fa-fish"></i> Pescados e frutos do mar</a>
-<a class="btn-botao carnes" onclick="funcaoBuscarAlimentos(6, 'fas fa-drumstick-bite', '#CD0621')"><i class="fas fa-drumstick-bite"></i> Carnes e derivados</a>
+
 <a class="btn-botao leite" onclick="funcaoBuscarAlimentos(7, 'fas fa-cheese', '#ADE94D')"><i class="fas fa-cheese"></i> Leite e derivados</a>
 <a class="btn-botao bebidas" onclick="funcaoBuscarAlimentos(8, 'fas fa-wine-glass-alt', '#4DD1E9')"><i class="fas fa-wine-glass-alt"></i> Bebidas</a>
 <a class="btn-botao ovos" onclick="funcaoBuscarAlimentos(9, 'fas fa-egg', '#E9D34D')"><i class="fas fa-egg"></i> Ovos e derivados</a>
@@ -53,8 +56,8 @@
 <a class="btn-botao preparados" onclick="funcaoBuscarAlimentos(13, 'fas fa-hamburger', '#8553D8')"><i class="fas fa-hamburger"></i> Alimentos preparados</a>
 <a class="btn-botao leguminosas" onclick="funcaoBuscarAlimentos(14, 'fas fa-utensil-spoon', '#D853CD')"><i class="fas fa-utensil-spoon"></i> Leguminosas e derivados</a>
 <a class="btn-botao sementes"  onclick="funcaoBuscarAlimentos(15, 'fas fa-seedling', '#00C4BC')"><i class="fas fa-seedling"></i> Nozes e sementes</a>
+-->
 </div>
-
 <div id="carrinho">
   <div class="coluna-carrinho">
     <div class="carrinho-de-alimentos" onclick="funcaoMostrarAlimentosPreSelecionados();">
@@ -63,10 +66,10 @@
   </div>
   <div class="coluna-carrinho-2">
     <div class="dieta-geral">
-      <a onclick="funcaoExibirAlimentos();" id="botao-dieta-geral">Gerar uma dieta Completa</a>
+      <a onclick="funcaoExibirAlimentos();" id="botao-dieta-geral">Mostrar dieta Completa</a>
     </div>
     <div class="gerar-dieta">
-      <a onclick="gerarDietaIncompleta();" id="botao2">Gerar dieta Incompleta</a>
+      <a id="botao2">Gerar dieta Completa</a>
     </div>
   </div>
   </div>
@@ -80,31 +83,36 @@
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
 <script src="../db.js"></script>
-<script src="../objects.js"></script>
-<script src="./imcfy.js"></script>
-<script src="./diet.js"></script>
+
+
 <script>
-    function init(){
-      var db = JSON.parse(localStorage.getItem('db_results_real2'));
-      criarFormQuantRef()
-      var botoes = " ";
-      var diet = document.getElementById('dieta');
-      diet.innerHTML = botoes;
-      var kcal = dietaBalanceada.gerarKcal();
-      dietaBalanceada.criarBlocoKcal(db.results[0].calorias);
-      
-      $('#botao3').click(function(){
-        imcGlobal();
-      });
-      $('#botao2').click(function(){
-        db.results[0].caloriaGeral = 0;
-        for(var k = 0; k < 15; k++){
-          funcaoClassificaCategoria(k);
-        }
-        funcaoDividirPelaQuantidadeDeRefeicoes();
-      });
+    function initDiet(){
+		let dbTeste = JSON.parse(localStorage.getItem('db_results_real2'));
+		if (!dbTeste) {
+			window.location.href = "../index.html";
+		};
+		criarFormQuantRef()
+		let botoes = " ";
+		let diet = document.getElementById('dieta');
+		diet.innerHTML = botoes;
+		let kcal = dietaBalanceada.gerarKcal();
+		dietaBalanceada.criarBlocoKcal(dbTeste.results[0].calorias);
+		
+		$('#botao3').click(function(){
+			imcGlobal();
+		});
+		$('#botao2').click(function(){
+			dbTeste.results[0].caloriaGeral = 0;
+			let type = 4;
+			for(let k = 0; k < 4; k++, type++){
+				funcaoClassificaCategoria(k, type);
+			}
+			funcaoDividirPelaQuantidadeDeRefeicoes();
+		});
     }
 </script>
+<script src="./imcfy.js"></script>
+<script src="./diet.js"></script>
 <footer>
   <div id="copyrigth">
     <a>Copyrigth LIFE ❤ UP</a>

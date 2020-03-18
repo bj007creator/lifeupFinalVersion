@@ -1,5 +1,5 @@
 
-var db = JSON.parse(localStorage.getItem('db_results_real2'));
+let db = JSON.parse(localStorage.getItem('db_results_real2'));
 
 //constantes que estavam no outro doc imcfy
 

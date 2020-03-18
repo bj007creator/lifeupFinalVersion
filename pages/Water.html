@@ -12,10 +12,10 @@
   <script src="https://code.jquery.com/jquery-3.4.1.js"></script>
   <link rel="stylesheet" href="./water.css">
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
-  <script src="./water.js"></script>
+  
   
 </head>
-<body style="background: #99CDE3" onload="init1();">
+<body style="background: #99CDE3" onload="initWater();">
   <header>
     <h1 style="display: none;">Life Up</h1><a href="../index.html"><img class="logo" src="../images/logo.gif"/></a>
     <nav>
@@ -109,11 +109,16 @@
     <a>Copyrigth LIFE ❤ UP</a></div>
 </footer>
 <script>
-  function init1(){
+  function initWater(){
+	let dbTeste = JSON.parse(localStorage.getItem('db_results_real2'));
+	if (!dbTeste) {
+		window.location.href = "../index.html";
+	}
     $('#botaow').click(function(){
       funcaoUmidade();
     });
   }
 </script>
+<script src="./water.js"></script>
 </body>
 </html>

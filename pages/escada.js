@@ -1,4 +1,4 @@
-var db = JSON.parse(localStorage.getItem('db_results_real2'));
+
 /*variáveis importantes de controle*/
 let arranjo_de_ilhas = [4, 5, 10, 19];
 let tempo = 300;
@@ -7,6 +7,7 @@ let indice = 0;
 let aux1 = tempo;
 let verifica = false;
 
+let db = JSON.parse(localStorage.getItem('db_results_real2'));
 
 function funcaoSumirMapa(){
     $("#mapa-do-tesouro").css("display", "none");

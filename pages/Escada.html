@@ -12,11 +12,11 @@
   <link rel="stylesheet" type="text/css" href="./escada.css">
   <link rel="shortcut icon" href="../images/favicon.png" />
   <script src="../db.js"></script>
-  <script src="./escada.js"></script>
+  
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
   
 </head>
-<body style="background: url(../images/Escada/background.webp)"  onload="initial()">
+<body style="background: url(../images/Escada/background.webp)"  onload="initSport()">
   <header>
       <h1 style="display: none;">Life Up</h1><a href="../index.html"><img class="logo" src="../images/logo.gif"/></a>
       <nav>
@@ -122,9 +122,14 @@
 </footer>
 
 <script>
-  function initial(){
+  function initSport(){
+	let dbTeste = JSON.parse(localStorage.getItem('db_results_real2'));
+	if (!dbTeste) {
+		window.location.href = "../index.html";
+	};
     funcaoReiderizarNovoFrame();
   }
 </script>
+<script src="./escada.js"></script>
 </body>
 </html>

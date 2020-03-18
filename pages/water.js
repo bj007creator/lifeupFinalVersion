@@ -1,3 +1,5 @@
+let db = JSON.parse(localStorage.getItem('db_results_real2'));
+
 function funcaoUmidade(){
     var lista = $("#listacdd").val().split(" ");
     var xmlhttp=new XMLHttpRequest();
@@ -40,7 +42,6 @@ function funcao1()
         }
 }
 
-var db = JSON.parse(localStorage.getItem('db_results_real2'));
 function funcaoClassificarUmidade(umidade){
     if(db.results[0].peso == 0){
         funcao1();

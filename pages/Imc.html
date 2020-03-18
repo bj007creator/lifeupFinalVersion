@@ -10,9 +10,9 @@
   <link href="../fontawesome/css/all.css" rel="stylesheet">
   <link rel="shortcut icon" href="../images/favicon.png" />
   <script src="https://code.jquery.com/jquery-3.4.0.min.js"></script>
-  <script src="./imcfy.js" type="text/javascript"></script>
+  
 </head>
-<body style="background: #FF9083">
+<body style="background: #FF9083" onload="initImc()">
   <header>
     <h1 style="display: none;">Life Up</h1><a href="../index.html"><img class="logo" src="../images/logo.gif"/></a>
     <nav>
@@ -45,6 +45,18 @@
   <div id="copyrigth">
 <a>Copyrigth LIFE ❤️ UP</a></div>
 </footer>
+
+<script>
+	function initImc(){
+		let dbTeste = JSON.parse(localStorage.getItem('db_results_real2'));
+		if (!dbTeste) {
+			window.location.href = "../index.html";
+		};
+	}
+	
+</script>
+<script src="./imcfy.js" type="text/javascript"></script>
+
 </body>
   
 </html>
