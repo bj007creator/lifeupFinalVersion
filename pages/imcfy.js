@@ -11,6 +11,61 @@ const esconder = 'esconder';
 const mostrar = 'mostrar';
 const SUPERMAGRO = 1, MAGRO = 2, PESOIDEAL = 3, UMPOUCOACIMA = 4, MUITOACIMA = 5;
 
+const dietaBalanceada = {
+    "gerarKcal": function(resetar){
+        switch(dbAux.results[0].state){
+            case SUPERMAGRO:
+                dbAux.results[0].calorias = dbAux.results[0].peso * 35;
+                break;
+            case MAGRO:
+                dbAux.results[0].calorias = dbAux.results[0].peso * 32;
+                break;
+            case PESOIDEAL:
+                dbAux.results[0].calorias = dbAux.results[0].peso * 30;
+                break;
+            case UMPOUCOACIMA:
+                dbAux.results[0].calorias = dbAux.results[0].peso * 25;
+                break;
+            case MUITOACIMA:
+                dbAux.results[0].calorias = dbAux.results[0].peso * 20;
+                break;
+        }
+		localStorage.setItem('db_results_real2', JSON.stringify(dbAux));
+		if(resetar){
+			window.location.href = "./Diet.html";
+		}
+    },
+    "criarBlocoKcal": function(kcal){
+        let content = ` 
+                        <div id="mostra-kcal" >
+                            <span class="kcal-marcador">
+                                ${kcal} kcal  
+                            </span></br>
+							<div id="reseta">
+								<button onclick="dietaBalanceada.gerarKcal(true)"><i class="fas fa-sync-alt"></i>    Resetar calorias</button>
+								
+							</div>
+                        </div>`;
+        let divsDoLayoutGrid = "";
+        for(let i = 0; i <= kcal; i++){
+            divsDoLayoutGrid += `<div class="index" style="background-color: red;"></div>`;
+        }
+        $('#contador-calorias').html(content);
+        $('#barra-gasto-calorico').html(divsDoLayoutGrid);
+        $('#barra-gasto-calorico').css("grid-template-rows", `repeat(${kcal/10}, 1fr)`);
+        $('#barra-gasto-calorico').css("grid-template-columns", `1fr`);
+        $('#barra-gasto-calorico').css("width", "15%");
+        $('#barra-gasto-calorico').css("height", `${kcal/10}px`);
+        $('#barra-gasto-calorico').css("margin-left", "20%");
+        $('#barra-gasto-calorico').css("margin-top", "5%");
+        
+    },
+    "descontarKcalAlimentoIngerido": function(kcal){
+        console.log(kcal);
+    }
+}
+
+
 //função para classificar o usuário em um nível baseando-se no cálculo do IMC
 
 function funcaoClassificar(){
@@ -75,6 +130,7 @@ function funcaoClassificar(){
                 }
             }
         }
+		dietaBalanceada.gerarKcal(false);
     }
     localStorage.setItem('db_results_real2', JSON.stringify(dbAux));
     document.getElementById('resultado').innerHTML = conteudo;

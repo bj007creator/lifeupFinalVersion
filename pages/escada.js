@@ -207,6 +207,7 @@ function funcaoContagem(){
     }
 }
 function funcaoStart(){
+	$("#legenda-atividade").html("");	
     status = 1;
     $('#crono1').css("display", "block");
     $('#crono').css("display", "grid");
@@ -256,7 +257,7 @@ function funcaoPausar(){
     
 }
 
-function funcaoAtividade1(index, tempo_exe){
+function funcaoAtividade1(index, tempo_exe, nomeAtividade, gifAtividade, legendaAtividade){
     aux1 = tempo_exe;
     
     db.results[3].index_global = index;
@@ -275,10 +276,10 @@ function funcaoAtividade1(index, tempo_exe){
         for(var i = 0; i < tempo_exe; i++){
             document.getElementsByClassName('fracao')[i].classList.remove('complete');
         }
-        var itens = `
+        let itens = `
         <div class="corpo-atividade">
-        <h1 class="titulo-atividade">Atividade 1 : Corrida de 5 minutos</h1>
-                    <img class="imagem-atividade" src=../images/Escada/corrida.gif>
+        <h1 class="titulo-atividade">${nomeAtividade} de ${(tempo_exe / 60)} minutos</h1>
+                    <img class="imagem-atividade" src=${gifAtividade}>
                     </br>
                     
                     <div id="botoes-atividade">
@@ -288,6 +289,14 @@ function funcaoAtividade1(index, tempo_exe){
                     </div>
         </div>
                     `
+		let legenda = `
+							<div style="margin-left: 30px">
+								<h1 style="text-align: left; margin-left : -20px" class="titulo-atividade">${nomeAtividade} : </h1>
+								<p style="font-family: arial; font-size: 1.2em;">${legendaAtividade}</p>
+							</div>
+		
+		`;
+		$("#legenda-atividade").html(legenda);		
         $("#res").html(itens);
     }
     else{

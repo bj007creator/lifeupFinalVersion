@@ -7,76 +7,6 @@ let dietaArray = [];
 
 let db = JSON.parse(localStorage.getItem('db_results_real2'));
 
-const dietaBalanceada = {
-    "gerarKcal": function(){
-        if(db.results[0].imc === -1){
-            imcGlobal();
-            $('#contador-calorias').css("display", "none");
-        }
-        else{
-                switch(db.results[0].state){
-                    case SUPERMAGRO:
-                        db.results[0].calorias = db.results[0].peso * 35;
-                        return db.results[0].peso * 35;
-                        break;
-                    case MAGRO:
-                        db.results[0].calorias = db.results[0].peso * 32;
-                        return db.results[0].peso * 32;
-                        break;
-                    case PESOIDEAL:
-                        db.results[0].calorias = db.results[0].peso * 30;
-                        return db.results[0].peso * 30;
-                        break;
-                    case UMPOUCOACIMA:
-                        db.results[0].calorias = db.results[0].peso * 25;
-                        return db.results[0].peso * 25;
-                        break;
-                    case MUITOACIMA:
-                        db.results[0].calorias = db.results[0].peso * 20;
-                        return db.results[0].peso * 20;
-                        break;
-                }
-            
-            
-        }
-        
-    },
-    "criarBlocoKcal": function(kcal){
-        let content = ` 
-                        <div id="mostra-kcal" >
-                            <span class="kcal-marcador">
-                                ${kcal} kcal  
-                            </span></br>
-                        </div>`;
-        let divsDoLayoutGrid = "";
-        for(let i = 0; i <= kcal; i++){
-            divsDoLayoutGrid += `<div class="index" style="background-color: red;"></div>`;
-        }
-        $('#contador-calorias').html(content);
-        $('#barra-gasto-calorico').html(divsDoLayoutGrid);
-        $('#barra-gasto-calorico').css("grid-template-rows", `repeat(${kcal/10}, 1fr)`);
-        $('#barra-gasto-calorico').css("grid-template-columns", `1fr`);
-        $('#barra-gasto-calorico').css("width", "15%");
-        $('#barra-gasto-calorico').css("height", `${kcal/10}px`);
-        $('#barra-gasto-calorico').css("margin-left", "20%");
-        $('#barra-gasto-calorico').css("margin-top", "5%");
-        
-    },
-    "descontarKcalAlimentoIngerido": function(kcal){
-        console.log(kcal);
-    }
-}
-
-function imcGlobal(){
-    if(db.results[0].imc == -1){
-        alert("VOCÊ DEVE CALCULAR SEU IMC PRIMEIRO!");
-        window.location.href = "./Imc.html"
-    }
-    else{
-        $('#res').html("");
-        console.log(db.results[0].imc);
-    }
-}
 //limpar array de alimentos
 
 function funcaoLimparArranjo(){
@@ -522,6 +452,14 @@ function funcaoClassificaCategoria(k, type){
 function funcaoRequisicaoAlimento(nome){
     window.location.href = `https://www.carrefour.com.br/busca/?termo=${nome}&foodzipzone=br`;
 }
+function funcaoResetArray(){
+	db.results[0].caloriaGeral = 0;
+	db.results[0].dieta[0].alimentosDieta = [];
+	db.results[0].dieta[1].arrayAlimentosAuxiliar = [];
+	dietaArray = [];
+	localStorage.setItem('db_results_real2', JSON.stringify(db));
+}
+
 /*função para dividir a kcal e as gramas pela quantidade de refeições*/
 function funcaoDividirPelaQuantidadeDeRefeicoes(){
 	console.log("dividir pela quant " + Number(db.results[0].quantRefeicoes));
@@ -555,7 +493,7 @@ function funcaoDividirPelaQuantidadeDeRefeicoes(){
 function funcaoExibirAlimentos(){
     let blocos = "";
     
-    if(db.results[0].dieta[0].alimentosDieta.length == 0){
+    if(db.results[0].dieta[1].arrayAlimentosAuxiliar.length == 0){
         //nenhum alimento selecionado
     }
     else{
@@ -574,27 +512,27 @@ function funcaoExibirAlimentos(){
             if(status == 0){
                 blocos += ` 
             <div class="corpo-pre-alimento-selecionado">
-                <div style="height: 200px;" class="info-alimento">
-                  <div class="corpo-alimento">
-                    <div class="img-categoria" style="background:url(../images/Diet/alimentos/${img}.webp);background-position: center;">
-                      <div class="tag-alimento"><span class="indicador"><i style="color:${cor}" class='${simbolo}'></i></span>
-                      </div>
-                    </div>
-                    <div class='circle-text'>
-                      <span>${nome}</span>
-                    </div>
-                  </div>
+                <div style="height: 320px; margin-top : 0px;" class="info-alimento">
+					<div class="corpo-alimento">
+						<div class="img-categoria" style="background:url(../images/Diet/alimentos/${img}.webp);background-position: center;">
+							<div class="tag-alimento"><span class="indicador"><i style="color:${cor}" class='${simbolo}'></i></span>
+							</div>
+						</div>
+						<div class='circle-text'>
+							<span>${nome}</span>
+						</div>
+					</div>
                 </div>
                 <div class="funcao-alimento">
-                  <div class='circle' onclick="funcaoEatAlimento('${kcal}','${i}');">
-                    <i class="fas fa-utensils"></i>
-                  </div>
+					<div class='circle' onclick="funcaoEatAlimento('${kcal}','${i}');">
+						<i class="fas fa-utensils"></i>
+					</div>
                 </div>
             </div>`;
             }
             else{
                 blocos += `  <div class="corpo-pre-alimento-selecionado">
-                <div style="height: 200px;" class="info-alimento">
+                <div style="height: 340px;" class="info-alimento">
                   <div class="corpo-alimento">
                     <div class="img-categoria" style="background:url(../images/Diet/alimentos/${img}.webp);background-position: center;">
                       <div class="tag-alimento"><span class="indicador"><i style="color:${cor}" class='${simbolo}'></i></span>
@@ -612,11 +550,10 @@ function funcaoExibirAlimentos(){
             }
             
         }//final do for
-		console.log("Chegou aqui");
-        $('#pre-selecionados').css('display', 'block');
-        $('#pre-selecionados').html(blocos);
     }
-    
+    console.log("Chegou aqui");
+    $('#pre-selecionados').css('display', 'block');
+    $('#pre-selecionados').html(blocos);
 }
 //função para atualizar o contador de kcal
 function funcaoEatAlimento(kcal, indice){
@@ -668,20 +605,20 @@ function funcaoEsconderAlimentosPreSelecionados(){
 //funcao que mostra os alimentos pré selecionados 
 
 function funcaoMostrarAlimentosPreSelecionados(){
-    var conteudo = " ";
+    let conteudo = " ";
     //variável para verificar se existe algum item já selecionado
-    var quantItensPreSelecionados = 0;
-    for(var i =  0; i < db.results[1].alimentos.length; i++){
-        for(var j = 0; j < db.results[1].alimentos[i].length; j++){
+    let quantItensPreSelecionados = 0;
+    for(let i =  0; i < db.results[1].alimentos.length; i++){
+        for(let j = 0; j < db.results[1].alimentos[i].length; j++){
             quantItensPreSelecionados++;
-            var nomesEspecificos = db.results[1].alimentos[i][j];
-            var caracteristicasEspecificas = db.results[2].atributos[i][j];
-            var arrayDeCaracteristicas = caracteristicasEspecificas.split("*");
-            var simboloCategoria = arrayDeCaracteristicas[5];
-            var corCategoria = arrayDeCaracteristicas[6];
-            var img = simboloCategoria.replace(" ","%20");
+            let nomesEspecificos = db.results[1].alimentos[i][j];
+            let caracteristicasEspecificas = db.results[2].atributos[i][j];
+            let arrayDeCaracteristicas = caracteristicasEspecificas.split("*");
+            let simboloCategoria = arrayDeCaracteristicas[5];
+            let corCategoria = arrayDeCaracteristicas[6];
+            let img = simboloCategoria.replace(" ","%20");
             conteudo += `  <div class="corpo-pre-alimento-selecionado">
-                <div style="height: 200px;" class="info-alimento">
+                <div style="height: 320px" class="info-alimento">
                     <div class="corpo-alimento">
                         <div class="img-categoria" style="background:url(../images/Diet/alimentos/${img}.webp);background-position: center;">
                             <div class="tag-alimento"><span class="indicador"><i style="color:${corCategoria}" class='${simboloCategoria}'></i></span>
@@ -733,24 +670,23 @@ function funcaoPequenaAnimacao(){
 
 //funcao guardar quantidade de refeicoes no LocalStorage
 function funcaoGuardarQuant(){
-    var valorDoSelect = parseInt($('#quantidade-refeicoes').val());
-    
+    let valorDoSelect = parseInt($('#quantidade-refeicoes').val());
     if(valorDoSelect == 0){
         console.log(valorDoSelect);
-        var alertaCampoNPreenchido =` <div id="alert-campo-n-preencido" class="alert alert-danger" role="alert">
+        let alertaCampoNPreenchido =` <div id="alert-campo-n-preencido" class="alert alert-danger" role="alert">
             Ops você não preencheu nenhum campo!!!
         </div> `;
-        var alert = document.getElementById('alertas');
+        let alert = document.getElementById('alertas');
         alert.innerHTML += alertaCampoNPreenchido;
         setTimeout(function(){
             $('#alert-campo-n-preencido').css('display', 'none');
         }, 3000);
     }
     else{
-        var alertaCampoPreenchido =` <div id="alert-success" class="alert alert-success" role="alert">
+        let alertaCampoPreenchido =` <div id="alert-success" class="alert alert-success" role="alert">
             Quantidade de refeições armazenadas com sucesso!
         </div>`;
-        var alert = document.getElementById('alertas');
+        let alert = document.getElementById('alertas');
         alert.innerHTML += alertaCampoPreenchido;
         setTimeout(function(){
             $('#alert-success').css('display', 'none');
@@ -770,7 +706,7 @@ var statusQuantRefeicoesDiarias = 0;
 function criarFormQuantRef(){
     statusQuantRefeicoesDiarias++;
     if(statusQuantRefeicoesDiarias == 1 && !db.results[0].quantRefeicoes){
-        var conteudoDoForm = `  <div id="form-quant-refeicoes">
+        let conteudoDoForm = `  <div id="form-quant-refeicoes">
                                     <span>Qual a quantidade de refeições que você faz?</span>
                                     <select class="custom-select" id="quantidade-refeicoes">
                                         <option value="0"  selected>Escolha...</option>
@@ -785,27 +721,36 @@ function criarFormQuantRef(){
     }
     else{
         $('#contador-calorias').css('display', 'block');
+		$("#items-diet").css("display", "block");
     }
 }
 //função para buscar alimentos
+let listaAberta = false;
 function funcaoBuscarAlimentos(indice, type, symbol, cor){
-    //criando botão do carrinho para verificar itens selecionados e ter a opção de deletá-los colocar aqui quando estiver dando certo a requisição com o nome do alimento passado como parâmetro para a função mostrar alimentos pré-selecionados; 
-    let opcoes = "";
-    for(let i = 0; i < db.results[`${type}`].length; i++){
-		let item = db.results[`${type}`][i];
-        let kcal = item.attributes.energy.kcal;
-        let kcalArredondado = parseFloat(kcal.toFixed(2));
-		let proteinas = item.attributes.protein.qty;    
-        let lipideos = item.attributes.lipid.qty;
-        let carboidratos = item.attributes.carbohydrate.qty;    
-        let fibras = item.attributes.fiber.qty;
-                
-        opcoes += ` <div class= bloco-alimento onclick="funcaoSelecionarAlimento('${item.description}', ${i}, '${indice}', '${kcalArredondado}', '${proteinas}', '${lipideos}', '${carboidratos}', '${fibras}', '${symbol}', '${cor}');">
-                        <p>Nome ${item.description}</br>
-                        <p>${kcalArredondado} Kcal</p>
-                    </div>`;
-    }
-    $('#res').html(opcoes);
+	if(!listaAberta){
+		listaAberta = true;
+		//criando botão do carrinho para verificar itens selecionados e ter a opção de deletá-los colocar aqui quando estiver dando certo a requisição com o nome do alimento passado como parâmetro para a função mostrar alimentos pré-selecionados; 
+		let opcoes = "";
+		for(let i = 0; i < db.results[`${type}`].length; i++){
+			let item = db.results[`${type}`][i];
+			let kcal = item.attributes.energy.kcal;
+			let kcalArredondado = parseFloat(kcal.toFixed(2));
+			let proteinas = item.attributes.protein.qty;    
+			let lipideos = item.attributes.lipid.qty;
+			let carboidratos = item.attributes.carbohydrate.qty;    
+			let fibras = item.attributes.fiber.qty;
+					
+			opcoes += ` <div style="border: 5px dashed orange;" class= bloco-alimento onclick="funcaoSelecionarAlimento('${item.description}', ${i}, '${indice}', '${kcalArredondado}', '${proteinas}', '${lipideos}', '${carboidratos}', '${fibras}', '${symbol}', '${cor}');">
+							<p>Nome ${item.description}</br>
+							<p>${kcalArredondado} Kcal</p>
+						</div>`;
+		}
+		$('#res').html(opcoes);
+	}
+	else{
+		listaAberta = false;
+		$('#res').html("");
+	}
 }
 
 //Criar botões categorizados 

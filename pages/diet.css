@@ -57,12 +57,8 @@ body {
     padding: 2%
 }
 
-@media (max-width:45em) {
-    div.btn-categorias a {
-        width: 40%;
-        padding: 2%
-    }
-}
+
+
 
 
 
@@ -71,8 +67,8 @@ body {
 /* CARRINHO*/
 #carrinho{user-select: none;font-family: "Roboto",sans-serif;border-bottom:2px solid #424242;}
 .carrinho-de-alimentos{font-family:"Roboto",sans-serif: inline-block;padding: 2%;}
-.dieta-geral{display: inline-block;padding: 2%;border-right: 2px solid #424242;}
-.gerar-dieta{display: inline-block;padding: 2%;}
+.dieta-geral{display: inline-block;padding: 0%;border-right: 2px solid #424242;}
+.gerar-dieta{display: inline-block;padding: 1%;}
 .coluna-carrinho{display: inline-block;width: 49%;}
 .coluna-carrinho-2{display: inline-block;width: 50%;text-align: end;}
 
@@ -241,11 +237,77 @@ div#menu ul li {
     font-family: Roboto, sans-serif;
     font-size: 2em;
     background: rgba(255, 255, 255, .4);
+	display : block;
+	font-weight : bolder;
+}
+div.gerar-dieta :hover{
+	color: #F9BD01;
+	box-shadow: 0px 0px 2px orange;
+}
+div.gerar-dieta > button{
+	background-color : transparent;
+	border : none;
+	transition-duration : .5s;
+}
+div.gerar-dieta > button:focus{
+	outline : none;
+}
+div.dieta-geral:hover{
+	box-shadow: 0px 0px 2px #F9BD01;
+}
+div.dieta-geral{
+	transition-duration : .5s;
+}
+div.dieta-geral > button:hover{
+	color : #F9BD01;
+}
+div.dieta-geral > button{
+	background-color : transparent;
+	border : none;
+	transition-duration : .5s;
+}
+div.dieta-geral > button:focus{
+	outline : none;
+}
+div.carrinho-de-alimentos > button{
+	background-color : transparent;
+	border : none;
+	transition-duration : .5s;
+}
+div.carrinho-de-alimentos > button:focus{
+	outline : none;
+}
+div.carrinho-de-alimentos > button:hover{
+	color : #F9BD01;
+	
+}
+#reseta > button{ 
+	background-color : transparent;
+	border : none;
+	transition-duration : .8s;
+	cursor: pointer;
+    border: 1px solid transparent;
+    padding: 1%;
+    margin: 2px;
+    border-radius: 8px;
+    font-family: Roboto, sans-serif;
+    display: inline-block;
+	font-weight : bolder;
+	font-size : 1.0em;
+}
+#reseta > button:hover{ 
+	box-shadow: 3px 3px 3px rgba(0,0,0,0.5);
+	background: #F9BD01;
+	color: #fff;
+	font-size : 1.2em;
+	
 }
 
 #mostra-kcal {
-    margin: 5%;
     text-align: center;
+}
+#reseta{
+	display: inline-block;
 }
 
 /*alimentos pré selecionados*/
@@ -263,20 +325,21 @@ div#menu ul li {
 #pre-selecionados{
     display: block;
     margin: 0 auto;
+	text-align : center;
     max-width: 100%;
     border: 1px dashed black;
     padding: 5%;
     background: linear-gradient(90deg, rgba(255,83,17,1) 36%, rgba(255,116,43,1) 100%);
 }
-.img-categoria{height: 150px;border-radius: 8px 8px 0px 0px;}
+.img-categoria{height: 180px;border-radius: 8px 8px 0px 0px;}
 .tag-alimento span.indicador{background: #fff;padding: 5%;border-radius: 100%;}
 #pre-selecionados > div{
-    display: inline-table;
+    display: inline-block;
     border-radius: 8px;
     text-align: center;
-    width: 10%;
+    width: 100px;
     margin: 0.5em;
-    height: 200px;
+    height: 400px;
 }
 #pre-selecionados > div > div > i{
     font-size: 1em;
@@ -323,13 +386,17 @@ div#menu ul li {
     
 }
 #formulario-quantidade-refs{
-    margin-left: 40%;
     margin-bottom: 2%;
+	text-align: center;
 }
 
 #alertas{
     margin-top: 2%;
     width: 100%;
+}
+
+#items-diet{
+	display : none;
 }
 
 /*resposta da dieta*/
@@ -394,5 +461,63 @@ div#menu ul li {
 #quarto > div{
     margin-right: -900px;
 }
+
+@media (max-width:70em) {
+    div.btn-categorias a {
+        width: 40%;
+        padding: 2%
+    }
+	#pre-selecionados{
+		text-align : center;
+	}
+	#pre-selecionados > div.corpo-pre-alimento-selecionado{
+		display: inline-block;
+		border-radius: 8px;
+		text-align: center;
+		width: 300px;
+		margin : 0 auto;
+		height: 350px;
+		margin-bottom : 20px;
+	}
+	#pre-selecionados > div.corpo-pre-alimento-selecionado > div.circle > i{
+		display: block;
+		padding : 0;
+		margin-top : -30px;
+	}
+	#pre-selecionados > div.corpo-pre-alimento-selecionado > div.funcao-alimento > div.circle > i {
+		display: block;
+		padding : 0;
+		margin-top : -30px;
+	}
+}
+
+@media (max-width:45em) {
+    div.btn-categorias a {
+        width: 40%;
+        padding: 2%
+    }
+	
+	#pre-selecionados > div.corpo-pre-alimento-selecionado{
+		display: block;
+		border-radius: 8px;
+		text-align: center;
+		width: 400px;
+		margin : 0 auto;
+		height: 350px;
+		margin-bottom : 20px;
+	}
+	#pre-selecionados > div.corpo-pre-alimento-selecionado > div.circle > i{
+		display: block;
+		padding : 0;
+		margin-top : -30px;
+	}
+	#pre-selecionados > div.corpo-pre-alimento-selecionado > div.funcao-alimento > div.circle > i {
+		display: block;
+		padding : 0;
+		margin-top : -30px;
+	}
+}
+
+
 
 
