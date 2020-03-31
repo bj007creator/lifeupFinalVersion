@@ -4,7 +4,7 @@ Life UP é uma aplicação web que visa facilitar a identificação de soluçõe
 
 ## **_IMC.fy_**
 
-Uma calculadora de IMC simples com visual atrativo.
+__Uma calculadora de IMC simples com visual atrativo.__
 
 ![image](https://user-images.githubusercontent.com/52046972/78071522-168d9700-7374-11ea-8596-cedd84e94a76.png)
 ![image](https://user-images.githubusercontent.com/52046972/78071558-22795900-7374-11ea-908d-83aba900cef1.png)
@@ -12,7 +12,9 @@ Uma calculadora de IMC simples com visual atrativo.
 ![image](https://user-images.githubusercontent.com/52046972/78071626-391fb000-7374-11ea-9da7-7183ff5c209c.png)
 ![comemoracao](https://user-images.githubusercontent.com/52046972/78071701-52c0f780-7374-11ea-95d6-8f759dfa8718.gif)
 ![corrida](https://user-images.githubusercontent.com/52046972/78071708-55bbe800-7374-11ea-9cf2-cb789880a05d.gif)
-![lupa](https://user-images.githubusercontent.com/52046972/78071721-59e80580-7374-11ea-85ce-a756245c8711.jpg)
+![stopGif](https://user-images.githubusercontent.com/52046972/78072164-00cca180-7375-11ea-9dcf-f41ea7e084bc.gif)
+![detetive](https://user-images.githubusercontent.com/52046972/78072172-05915580-7375-11ea-9c8d-9c13de26efdb.gif)
+
 
 __LifeUp__
 #Markdown
